@@ -1,0 +1,42 @@
+.App {
+  text-align: center;
+}
+
+.distribution {
+    position:absolute;
+    top: 10%;
+    left: 560px;
+}
+
+.restart{
+    position:absolute;
+    top: 13%;
+    left: 565px;
+}
+
+.playerOne {
+    position:absolute;
+    top: 10%;
+    left: 350px;
+}
+
+.playerTwo {
+    position:absolute;
+    top: 10%;
+    left: 650px;
+}
+
+.cardsList{
+    height: 100px;
+    width: 66px;
+    float: left;
+    margin: 1px;
+}
+
+.tableCardList{
+    width: 210px;
+}
+
+.buttonGetCard{
+    margin: 5px;
+}
