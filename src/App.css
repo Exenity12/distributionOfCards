@@ -40,3 +40,9 @@
 .buttonGetCard{
     margin: 5px;
 }
+
+.counterBalance{
+    position:absolute;
+    top: 16%;
+    left: 570px;
+}
