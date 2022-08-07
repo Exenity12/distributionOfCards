@@ -1,98 +1,52 @@
-import { React, useState, useCallback, useEffect} from 'react';
+import { React, useState } from 'react';
+import DeckOfCard from ".//DeckOfCard.js"
+import { BrowserRouter, Routes, Route } from "react-router-dom";
 import axios from 'axios';
 import './App.css';
-
-const url = "https://deckofcardsapi.com/api/deck/new/shuffle/?deck_count=1";
-let idDeckCard;
-let idIsReceived = false;
+import MainScreen from './MainScreen.js';
 
 function App() {
 
-    const [isDisable, setIsDisable] = useState(true);
-    const [counterBalance, setCounterBalance] = useState();
-    const [deckPlayerTwo, setDeckPlayerTwo] = useState([]);
-    const [deckPlayerOne, setDeckPlayerOne] = useState([]);
-    
+    const url = "https://deckofcardsapi.com/api/deck/new/shuffle/?deck_count=1";
+
+    const [allDeck, setAllDeck] = useState([]);
+    const [idDeckCard, setIdDeckCard] = useState();
+    const [idUniqueDeckCard, setIdUniqueDeckCard] = useState(-1);
+    const [loadSave, setLoadSave] = useState();
+    const [isLoadSave, setIsLoadSave] = useState(false);
+
     let getADeck = async () => {
-        if(idIsReceived) return;
         console.log("the deck is received");
-        setIsDisable(false);
-        idIsReceived = true;
         const req = await axios.get(url);
-        idDeckCard = req.data.deck_id;
-        setCounterBalance(req.data.remaining);
+        setIdDeckCard(req.data.deck_id)
+        setIdUniqueDeckCard(prev => prev + 1);
+        setIsLoadSave(false);
     };
-
-    let getCardPlayerOne = async () => {
-        if(!idIsReceived) return;
-        setIsDisable(true);
-        idIsReceived = true;
-        let urlCard = "https://deckofcardsapi.com/api/deck/" + idDeckCard + "/draw/?count=1";
-        const resOne = await axios.get(urlCard);
-        setDeckPlayerOne([...deckPlayerOne, ...resOne.data.cards]);
-        setCounterBalance(resOne.data.remaining);
-        setIsDisable(false);
-    };
-
-    let getCardPlayerTwo = useCallback(
-        async () => {
-            setIsDisable(true);
-            if(!idIsReceived) return;
-            idIsReceived = true;
-            let urlCard = "https://deckofcardsapi.com/api/deck/" + idDeckCard + "/draw/?count=1"
-            const resTwo = await axios.get(urlCard);
-            setDeckPlayerTwo([...deckPlayerTwo, ...resTwo.data.cards]);
-            setCounterBalance(resTwo.data.remaining);
-            setIsDisable(false);
-        }, [deckPlayerTwo]
-    );
-
-    let restart = () => {
-        setDeckPlayerOne([]);
-        setDeckPlayerTwo([]);
-        setCounterBalance();
-        setIsDisable(true);
-        idIsReceived = false;
-    }
-
-
-    useEffect(() => {
-        console.log(deckPlayerOne);
-    }, [deckPlayerOne]);
-     
-    useEffect(() => {
-        console.log(deckPlayerTwo);
-    }, [deckPlayerTwo]);
-
 
 
     return (
         <div className="App">
-            <div className='counterBalance'>{counterBalance}</div>
-            <div className="distribution">
-                <button id="getADeck" onClick={getADeck}>Start game</button>
-            </div>
-            <div className="restart">
-                <button onClick={restart} disabled={isDisable}>restart</button>
-            </div>
-            <div className="playerOne">
-                <button  className='buttonGetCard' onClick={getCardPlayerOne} disabled={isDisable}>playerOne</button>
-                <div className="tableCardList">{deckPlayerOne.map(item => 
-                    <div key={item.code}>
-                        <img className='cardsList' src={item.images.png} alt={item.code}></img>
-                    </div>)}
-                </div>
-            </div>
-            <div className="playerTwo">
-                <button className='buttonGetCard' onClick={getCardPlayerTwo} disabled={isDisable}>playerTwo</button>
-                <div className="tableCardList">{deckPlayerTwo.map(item => 
-                    <div key={item.code}>
-                        <img className='cardsList' src={item.images.png} alt="qwereqqr"></img>
-                    </div>)}
-                </div>
-            </div>
+            <BrowserRouter>
+                <Routes>
+                    <Route path="/" element={
+                    <MainScreen 
+                        getADeck={getADeck}
+                        allDeck={allDeck}
+                        setLoadSave={setLoadSave}
+                        setIsLoadSave={setIsLoadSave}
+                    />}/>
+                    <Route path="/DeckOfCard" element={
+                        <DeckOfCard
+                            setAllDeck={setAllDeck}
+                            idDeckCard={idDeckCard}
+                            idUniqueDeckCard={idUniqueDeckCard}
+                            loadSave={loadSave}
+                            isLoadSave={isLoadSave}
+                        />}/>
+                </Routes>
+            </BrowserRouter>
         </div>
-    );
+    );  
 }
 
 export default App;

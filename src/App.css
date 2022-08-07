@@ -2,15 +2,9 @@
   text-align: center;
 }
 
-.distribution {
-    position:absolute;
-    top: 10%;
-    left: 560px;
-}
-
 .restart{
     position:absolute;
-    top: 13%;
+    top: 10%;
     left: 565px;
 }
 
@@ -46,3 +40,8 @@
     top: 16%;
     left: 570px;
 }
+
+.header{
+    position:absolute;
+    left: 600px;
+} 
