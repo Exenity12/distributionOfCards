@@ -5,8 +5,6 @@ import { NavLink } from 'react-router-dom';
 function MainScreen(props) {
     if(!props.allDeck[props.actualIdDeck]) return
 
-    console.log(props.allDeck[props.actualIdDeck].deckPlayerOne)
-
     return (
         <div className="App">
             <div className='counterBalance'>{props.allDeck[props.actualIdDeck].counterBalance}</div>

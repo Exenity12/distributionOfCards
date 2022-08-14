@@ -37,7 +37,6 @@ function App() {
         let clonObj = Object.assign({}, allDeck);
         clonObj[actualIdDeck].deckPlayerOne.push(...resOne.data.cards);
         clonObj[actualIdDeck].counterBalance = resOne.data.remaining;
-        console.log(clonObj)
         setAllDeck(clonObj);
     };
 
@@ -56,12 +55,9 @@ function App() {
 
     let changeADeck = (value) => {
         deckKeys.forEach(keys => {
-            Object.keys(allDeck[keys]).forEach(key => {
-                console.log(allDeck[keys][key], value)
-                if(allDeck[keys][key] == value){
-                    setActualIdDeck(allDeck[keys].actualIdDeck);
-                };
-            });
+            if(allDeck[keys].idInList == value){
+                setActualIdDeck(allDeck[keys].actualIdDeck);
+            };
         });
     };
 
