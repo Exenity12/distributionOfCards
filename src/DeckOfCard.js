@@ -7,9 +7,10 @@ function MainScreen(props) {
 
     return (
         <div className="App">
+            <div>Игра номер {(props.allDeck[props.actualIdDeck].idInList + 1)}</div>
             <div className='counterBalance'>{props.allDeck[props.actualIdDeck].counterBalance}</div>
             <div className="restart">
-                <NavLink to={`/`} onClick={props.restart}>restart</NavLink>
+                <NavLink to={`/`} onClick={props.restart}>Список игр</NavLink>
             </div>
             <div className="playerOne">
                 <button className='buttonGetCard' onClick={props.getCardPlayerOne}>playerOne</button>

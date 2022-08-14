@@ -4,8 +4,8 @@
 
 .restart{
     position:absolute;
-    top: 10%;
-    left: 565px;
+    top: 5%;
+    left: 400px;
 }
 
 .playerOne {
@@ -45,3 +45,9 @@
     position:absolute;
     left: 600px;
 } 
+
+.listOfSave{
+    position:absolute;
+    top: 6%;
+    left: 600px;
+}

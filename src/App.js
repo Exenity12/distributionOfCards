@@ -1,4 +1,4 @@
-import { React, useEffect, useState } from 'react';
+import { React, useState } from 'react';
 import DeckOfCard from ".//DeckOfCard.js"
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import axios from 'axios';
