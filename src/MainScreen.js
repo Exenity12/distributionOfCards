@@ -5,23 +5,18 @@ import './App.css';
 
 function MainScreen(props) {
 
-    let changeADeck = (value) => {
-        console.log(value.innerHTML)
-        props.allDeck.forEach(item => {
-            if(item.id == value.innerHTML) {
-                console.log(item)
-                props.setLoadSave(item)
-            };
-        });
-        props.setIsLoadSave(true);
-    };
-
     return (
         <div className="App">
                 <div className="App">
                     <div className='header'>Карты</div>
                     <div>
-                        {props.allDeck.map(item => <NavLink to={`/DeckOfCard`} key={item.id} onClick={(e) => changeADeck(e.target)}>{item.id}</NavLink>)}
+                        {props.deckKeys.length && 
+                            props.deckKeys.map(deckKey => (
+                                <NavLink to={`/DeckOfCard`} key={props.allDeck[deckKey].idInList} onClick={(e) => props.changeADeck(e.target.innerHTML)}>
+                                    {props.allDeck[deckKey].idInList}
+                                </NavLink>
+                            ))
+                        }
                     </div>
                     <NavLink to={`/DeckOfCard`} onClick={props.getADeck}>Start</NavLink>
                 </div>

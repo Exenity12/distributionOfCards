@@ -1,4 +1,4 @@
-import { React, useState } from 'react';
+import { React, useEffect, useState } from 'react';
 import DeckOfCard from ".//DeckOfCard.js"
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import axios from 'axios';
@@ -9,20 +9,61 @@ function App() {
 
     const url = "https://deckofcardsapi.com/api/deck/new/shuffle/?deck_count=1";
 
-    const [allDeck, setAllDeck] = useState([]);
-    const [idDeckCard, setIdDeckCard] = useState();
-    const [idUniqueDeckCard, setIdUniqueDeckCard] = useState(-1);
-    const [loadSave, setLoadSave] = useState();
-    const [isLoadSave, setIsLoadSave] = useState(false);
+    const [allDeck, setAllDeck] = useState({});
+    const [actualIdDeck, setActualIdDeck] = useState(0);
+    const [idDeckInAllList, setIdDeckInAllList] = useState(0);
+    const [deckKeys, setDeckKeys] = useState([]);
 
     let getADeck = async () => {
         console.log("the deck is received");
         const req = await axios.get(url);
-        setIdDeckCard(req.data.deck_id)
-        setIdUniqueDeckCard(prev => prev + 1);
-        setIsLoadSave(false);
+        setActualIdDeck(req.data.deck_id);
+        setAllDeck(prev => ({
+            ...prev,
+            [req.data.deck_id]: {
+                counterBalance: 52,
+                deckPlayerOne: [],
+                deckPlayerTwo: [],
+                idInList: idDeckInAllList,
+                actualIdDeck: req.data.deck_id,
+            }
+        }));
+        setIdDeckInAllList(prev => prev + 1);
     };
 
+    let getCardPlayerOne = async () => {
+        let urlCard = "https://deckofcardsapi.com/api/deck/" + actualIdDeck + "/draw/?count=1";
+        const resOne = await axios.get(urlCard);
+        let clonObj = Object.assign({}, allDeck);
+        clonObj[actualIdDeck].deckPlayerOne.push(...resOne.data.cards);
+        clonObj[actualIdDeck].counterBalance = resOne.data.remaining;
+        console.log(clonObj)
+        setAllDeck(clonObj);
+    };
+
+    let getCardPlayerTwo = async () => {
+        let urlCard = "https://deckofcardsapi.com/api/deck/" + actualIdDeck + "/draw/?count=1"
+        const resTwo = await axios.get(urlCard);
+        let clonObj = Object.assign({}, allDeck);
+        clonObj[actualIdDeck].deckPlayerTwo.push(...resTwo.data.cards);
+        clonObj[actualIdDeck].counterBalance = resTwo.data.remaining;
+        setAllDeck(clonObj);
+    };
+
+    let restart = () => {
+        setDeckKeys(Object.keys(allDeck))
+    };
+
+    let changeADeck = (value) => {
+        deckKeys.forEach(keys => {
+            Object.keys(allDeck[keys]).forEach(key => {
+                console.log(allDeck[keys][key], value)
+                if(allDeck[keys][key] == value){
+                    setActualIdDeck(allDeck[keys].actualIdDeck);
+                };
+            });
+        });
+    };
 
     return (
         <div className="App">
@@ -30,18 +71,19 @@ function App() {
                 <Routes>
                     <Route path="/" element={
                     <MainScreen 
-                        getADeck={getADeck}
                         allDeck={allDeck}
-                        setLoadSave={setLoadSave}
-                        setIsLoadSave={setIsLoadSave}
+                        getADeck={getADeck}
+                        changeADeck={changeADeck}
+                        deckKeys={deckKeys}
                     />}/>
                     <Route path="/DeckOfCard" element={
                         <DeckOfCard
                             setAllDeck={setAllDeck}
-                            idDeckCard={idDeckCard}
-                            idUniqueDeckCard={idUniqueDeckCard}
-                            loadSave={loadSave}
-                            isLoadSave={isLoadSave}
+                            allDeck={allDeck}
+                            getCardPlayerOne={getCardPlayerOne}
+                            getCardPlayerTwo={getCardPlayerTwo}
+                            actualIdDeck={actualIdDeck}
+                            restart={restart}
                         />}/>
                 </Routes>
             </BrowserRouter>
